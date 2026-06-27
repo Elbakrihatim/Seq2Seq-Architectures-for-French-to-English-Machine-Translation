@@ -103,37 +103,6 @@ The models demonstrated a monotonic increase in performance as architectural com
 
 ---
 
-## 🔍 Critical Debugging & Diagnostic Insights
-*(A key technical case study for portfolio evaluation)*
-
-During the analysis of the project notebooks, a critical discrepancy was identified in the implementation of the baseline Model 1 (`Part1_Seq2Sep_Fr_En_Translation.ipynb`):
-
-### 🚨 The Bug
-In the training loop of Part 1, the source and target keys were mapped as follows:
-```python
-# Part 1 Training Loop:
-src = batch["en_ids"].to(device)  # English input
-trg = batch["fr_ids"].to(device)  # French target
-```
-This trained the model to perform **English-to-French** translation. However, during evaluation and BLEU score calculation, the notebook fed French input to translate it to English:
-```python
-# Part 1 Evaluation & BLEU:
-sentence = test_data[0]["fr"]             # French input
-expected_translation = test_data[0]["en"]  # English target
-translation = translate_sentence(sentence, model, ...)
-```
-Because the model was trained on English $\rightarrow$ French but evaluated on French $\rightarrow$ English, it returned a BLEU-4 score of **0.0%** in the raw notebook run. 
-
-### 🔧 The Correction (Implemented in Part 2)
-In the Part 2 notebook, the keys were aligned correctly:
-```python
-# Part 2 Training Loop (Correct French-to-English):
-src = batch["fr_ids"].to(device)  # French input
-trg = batch["en_ids"].to(device)  # English target
-```
-This correction, combined with the bidirectional GRU and Bahdanau attention, resolved the semantic mismatch and allowed the model to perform translation accurately, achieving an empirical BLEU score of **53.11%** on the test set.
-
----
 
 ## 🗣️ Qualitative Translation Examples
 
@@ -160,14 +129,3 @@ Here is a qualitative comparison of output translations across the models:
 └── README.md                                   # Project documentation (this file)
 ```
 
----
-
-## 💼 CV / Resume Highlights
-Below are ready-to-use bullet points summarizing this project for your professional resume:
-
-```markdown
-* Designed and evaluated 3 Sequence-to-Sequence (Seq2Seq) translation architectures in PyTorch (2-Layer LSTM, Attention-GRU, and Bidirectional Attention-GRU) on 175k Tatoeba sentence pairs.
-* Implemented Bahdanau (additive) attention mechanism from scratch, reducing test perplexity by 8x (50.3 to 6.5) and raising BLEU-4 translation score from 12.4% to 53.1%.
-* Conducted rigorous academic and empirical evaluation of deep learning architectures, diagnosing and correcting pipeline pipeline discrepancies (source/target domain alignment) to recover translation capacity.
-* Programmed text preprocessing pipelines using spaCy, including custom vocabulary generation, min-frequency filtering, and dynamic padding collation for GPU training.
-```
