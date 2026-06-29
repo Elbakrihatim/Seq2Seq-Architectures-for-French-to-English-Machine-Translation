@@ -24,7 +24,7 @@ from src.model_utils import (
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="Seq2Seq NMT - French to English",
+    page_title="Seq2Seq Translation Model by Hatim EL BAKRI",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -185,7 +185,7 @@ with st.sidebar:
     """)
 
 # --- Layout: Main Banner ---
-st.markdown("<h1 style='text-align: center; color: #e2e8f0; margin-bottom: 5px;'>🤖 Seq2Seq Machine Translation</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #e2e8f0; margin-bottom: 5px;'>🤖 Seq2Seq Machine Translation by Hatim EL BAKRI</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: #a0aec0; font-size:1.15rem; margin-bottom: 25px;'>Translate sentences from French to English using a Bidirectional GRU Encoder and Additive Attention</p>", unsafe_allow_html=True)
 
 col1, col2 = st.columns([1, 1])
@@ -195,7 +195,6 @@ with col1:
     
     # Preset sentences selector for quick testing
     presets = [
-        "Je mange la pomme.",
         "Il fait beau aujourd'hui.",
         "Je veux une pomme.",
         "Le vent était tellement fort que nous avons presque été poussés en dehors de la route.",
