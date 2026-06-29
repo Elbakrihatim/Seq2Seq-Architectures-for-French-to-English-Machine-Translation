@@ -4,3 +4,4 @@ Presentacion.pdf
 test_load.py
 data.zip
 data/
+__pycache__/
