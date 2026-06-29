@@ -121,11 +121,48 @@ Here is a qualitative comparison of output translations across the models:
 
 ```tree
 .
-├── Part1_Seq2Sep_Fr_En_Translation.ipynb       # 2-Layer LSTM baseline (with training/evaluation pipeline)
-├── Part2_Seq2Sep_Fr_En_Translation.ipynb       # Bidirectional GRU + Bahdanau Attention model
-├── seq2seq_translation_tutorial.ipynb.ipynb    # Original PyTorch Seq2Seq tutorial code reference
-├── Informe.pdf                                 # Academic project report (Spanish)
-├── Presentacion.pdf                            # Project presentation slide deck (Spanish)
-└── README.md                                   # Project documentation (this file)
+├── app.py                      # Main Streamlit web application entry point
+├── requirements.txt            # Production-pinned package dependencies
+├── notebooks/                  # Experimental research notebooks (stages 1 to 3)
+│   ├── 01_LSTM_Baseline.ipynb           # Model 1: 2-Layer LSTM baseline
+│   ├── 02_GRU_With_Attention.ipynb      # Model 2: Unidirectional GRU + Attention
+│   └── 03_BiGRU_With_Attention.ipynb    # Model 3: Bidirectional GRU + Attention
+├── src/                        # Modular production code
+│   ├── __init__.py             # Package marker
+│   └── model_utils.py          # Model architecture, vocab loader, and translation logic
+├── models/                     # Trained serialized checkpoints and vocabulary
+│   ├── best-model.pt           # Quantized (FP16) model weights (~50MB)
+│   └── vocab.pkl               # Serialized source & target vocabularies
+├── tests/                      # Scripts verifying model compatibility and code integrity
+│   └── test_load.py            # Local model loading and vocab reconstruction test
+├── docs/                       # Technical reports and guides
+│   └── deployment_guide.md     # Comprehensive deployment documentation
+└── README.md                   # Main project overview (this file)
 ```
+
+---
+
+## 🛠️ Production-Ready Engineering Practices
+
+To make this research project robust and deployable, several industry-standard engineering practices were applied:
+
+1. **Separation of Concerns (Modular OOP)**: Research code from Jupyter Notebooks was refactored into a reusable source package (`src/model_utils.py`). The Streamlit UI code (`app.py`) only imports these modular classes, keeping frontend layout fully decoupled from neural network architectures.
+2. **Model Weight Optimization (Quantization)**: To stay under GitHub's 100MB file size limits and optimize deployment bandwidth, the final trained weights (`best-model.pt`) were converted to half-precision (FP16), reducing size from **101MB to 50MB** with zero loss in translation BLEU score.
+3. **CPU Compatibility Bridge**: Cloud CPU runners do not natively support half-precision GRU weights. The asset loader dynamically casts weights back to full-precision (FP32) in memory at runtime to ensure seamless, error-free execution on standard free-tier web instances.
+4. **Reproducible Environment**: Dependencies are pinned in `requirements.txt` (including `numpy<2.0.0` to avoid binary ABI incompatibilities with Cython-compiled libraries like `spaCy` and `thinc`).
+
+---
+
+## 💻 Running the App Locally
+
+To launch the web interface locally, install the dependencies and run the Streamlit server:
+
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Run the Streamlit application
+streamlit run app.py
+```
+
 

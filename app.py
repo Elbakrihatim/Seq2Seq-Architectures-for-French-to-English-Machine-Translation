@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import streamlit as st
 
-# Import from model_utils
-from model_utils import (
+# Import from src.model_utils
+from src.model_utils import (
     Vocabulary,
     Encoder,
     Attention,
@@ -88,7 +88,7 @@ st.markdown("""
 # --- Cached Asset Loading to prevent re-processing ---
 @st.cache_resource
 def load_nlp_and_vocab():
-    vocab_path = "vocab.pkl"
+    vocab_path = "models/vocab.pkl"
     en_nlp = spacy.load("en_core_web_sm")
     fr_nlp = spacy.load("fr_core_news_sm")
 
@@ -137,7 +137,7 @@ def load_nlp_and_vocab():
     return fr_nlp, en_nlp, fr_vocab, en_vocab
 
 @st.cache_resource
-def load_nmt_model(_fr_vocab, _en_vocab, checkpoint_path="best-model.pt"):
+def load_nmt_model(_fr_vocab, _en_vocab, checkpoint_path="models/best-model.pt"):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     encoder = Encoder(len(_fr_vocab), 256, 512, 512, 0.5)
