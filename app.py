@@ -265,7 +265,12 @@ def load_nmt_model(_fr_vocab, _en_vocab, checkpoint_path="best-model.pt"):
     model = Seq2Seq(encoder, decoder, device).to(device)
     
     if os.path.exists(checkpoint_path):
-        model.load_state_dict(torch.load(checkpoint_path, map_location=device))
+        state_dict = torch.load(checkpoint_path, map_location=device)
+        # Convert fp16 weights back to float32 if on CPU, since CPU GRU doesn't support fp16 operations
+        for k, v in state_dict.items():
+            if torch.is_tensor(v) and v.dtype == torch.float16:
+                state_dict[k] = v.float()
+        model.load_state_dict(state_dict)
         model.eval()
         return model, device
     else:

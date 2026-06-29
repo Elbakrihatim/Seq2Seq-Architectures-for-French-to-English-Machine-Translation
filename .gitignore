@@ -1,7 +1,6 @@
 .gitignore
 Informe.pdf
 Presentacion.pdf
-best-model.pt
 test_load.py
 data.zip
 data/
